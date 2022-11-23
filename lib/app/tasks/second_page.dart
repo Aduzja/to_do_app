@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/helpers/size_helper.dart';
 import 'package:to_do_app/helpers/constants.dart';
@@ -12,14 +13,26 @@ class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          FirebaseFirestore.instance.collection('tasks').add(
-            {'title': controller.text},
-          );
-          controller.clear();
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              FirebaseFirestore.instance.collection('tasks').add(
+                {'title': controller.text},
+              );
+              controller.clear();
+            },
+            child: const Icon(Icons.add),
+          ),
+          FloatingActionButton.extended(
+            icon: const Icon(Icons.logout),
+            label: const Text('Log out'),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Container(
