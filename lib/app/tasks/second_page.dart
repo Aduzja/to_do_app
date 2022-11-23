@@ -6,13 +6,23 @@ import 'package:to_do_app/helpers/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SecondPage extends StatelessWidget {
-  SecondPage({Key? key}) : super(key: key);
+  SecondPage({Key? key, required this.user}) : super(key: key);
 
   final controller = TextEditingController();
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'TO-DO',
+          style: GoogleFonts.poppins(
+            fontSize: SizeHelper.getSizeFromPx(context, 55),
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -27,7 +37,13 @@ class SecondPage extends StatelessWidget {
           ),
           FloatingActionButton.extended(
             icon: const Icon(Icons.logout),
-            label: const Text('Log out'),
+            label: Text(
+              'Log out',
+              style: GoogleFonts.poppins(
+                fontSize: SizeHelper.getSizeFromPx(context, 45),
+                fontWeight: FontWeight.normal,
+              ),
+            ),
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
@@ -50,14 +66,50 @@ class SecondPage extends StatelessWidget {
                 return const Text('An unexpected error occurred');
               }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('Please wait, loading');
-              }
-
               final documents = snapshot.data!.docs;
 
               return ListView(
                 children: [
+                  Container(
+                    margin: EdgeInsets.all(
+                      SizeHelper.getSizeFromPx(context, 55),
+                    ),
+                    height: SizeHelper.getSizeFromPx(context, 120),
+                    color: Constants.colorPink,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          '${user.email}',
+                          style: GoogleFonts.poppins(
+                            fontSize: SizeHelper.getSizeFromPx(context, 45),
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'points: ',
+                              style: GoogleFonts.poppins(
+                                fontSize: SizeHelper.getSizeFromPx(context, 45),
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              '0',
+                              style: GoogleFonts.poppins(
+                                fontSize: SizeHelper.getSizeFromPx(context, 45),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   for (final document in documents) ...[
                     Dismissible(
                       key: ValueKey(document.id),
@@ -103,15 +155,15 @@ class TaskWidget extends StatelessWidget {
     return Container(
       color: Constants.colorMustard,
       padding: EdgeInsets.all(
-        SizeHelper.getSizeFromPx(context, 55),
+        SizeHelper.getSizeFromPx(context, 45),
       ),
       margin: EdgeInsets.all(
-        SizeHelper.getSizeFromPx(context, 55),
+        SizeHelper.getSizeFromPx(context, 45),
       ),
       child: Text(
         title,
         style: GoogleFonts.poppins(
-          fontSize: SizeHelper.getSizeFromPx(context, 55),
+          fontSize: SizeHelper.getSizeFromPx(context, 50),
           fontWeight: FontWeight.normal,
         ),
       ),
