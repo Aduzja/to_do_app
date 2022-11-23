@@ -1,15 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/helpers/ad_mod_service.dart';
 import 'package:to_do_app/helpers/size_helper.dart';
 import 'package:to_do_app/helpers/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SecondPage extends StatelessWidget {
-  SecondPage({Key? key, required this.user}) : super(key: key);
+  SecondPage({Key? key, required this.user}) : super(key: key) {
+    adManager.addAds(true, true, true);
+  }
+
+  final User user;
+  final adManager = AdManager();
 
   final controller = TextEditingController();
-  final User user;
+
+  int _points = 0;
+
+  void _pointsCounter() {
+    setState() {
+      _points = _points + 3;
+    }
+
+    ;
+  }
+
+  void _lessPoint() {
+    setState() {
+      _points = _points - 1;
+    }
+
+    ;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +50,34 @@ class SecondPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           FloatingActionButton(
-            onPressed: () {
-              FirebaseFirestore.instance.collection('tasks').add(
-                {'title': controller.text},
-              );
-              controller.clear();
-            },
+            onPressed: _points == 0
+                ? () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Oooops...'),
+                        content: const Text('Watch an ad and earn points'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              adManager.showRewardedAd();
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text('Watch'),
+                          ),
+                        ],
+                      ),
+                    );
+                    _points;
+                    _pointsCounter;
+                  }
+                : () {
+                    FirebaseFirestore.instance.collection('tasks').add(
+                      {'title': controller.text},
+                    );
+                    controller.clear();
+                    _lessPoint;
+                  },
             child: const Icon(Icons.add),
           ),
           FloatingActionButton.extended(
@@ -98,7 +143,7 @@ class SecondPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '0',
+                              '$_points',
                               style: GoogleFonts.poppins(
                                 fontSize: SizeHelper.getSizeFromPx(context, 45),
                                 fontWeight: FontWeight.bold,
