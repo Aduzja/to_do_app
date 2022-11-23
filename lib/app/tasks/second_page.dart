@@ -16,7 +16,7 @@ class SecondPage extends StatelessWidget {
 
   final controller = TextEditingController();
 
-  int _points = 0;
+  int _points = 3;
 
   void _pointsCounter() {
     setState() {
