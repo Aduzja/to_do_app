@@ -4,13 +4,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:to_do_app/app/tasks/second_page.dart';
 import 'package:to_do_app/helpers/size_helper.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({
     Key? key,
   }) : super(key: key);
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  var errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Log in',
+                        'Sign in',
                         style: GoogleFonts.poppins(
                           fontSize: SizeHelper.getSizeFromPx(context, 55),
                           fontWeight: FontWeight.bold,
@@ -39,11 +46,11 @@ class LoginPage extends StatelessWidget {
                         height: SizeHelper.getSizeFromPx(context, 55),
                       ),
                       TextField(
-                        controller: emailController,
+                        controller: widget.emailController,
                         decoration: const InputDecoration(hintText: 'E-mail'),
                       ),
                       TextField(
-                        controller: passwordController,
+                        controller: widget.passwordController,
                         decoration: const InputDecoration(hintText: 'Password'),
                         obscureText: true,
                       ),
@@ -51,7 +58,7 @@ class LoginPage extends StatelessWidget {
                         height: SizeHelper.getSizeFromPx(context, 55),
                       ),
                       Text(
-                        'You are not logged in',
+                        errorMessage,
                         style: GoogleFonts.poppins(
                           fontSize: SizeHelper.getSizeFromPx(context, 35),
                           fontWeight: FontWeight.normal,
@@ -65,14 +72,16 @@ class LoginPage extends StatelessWidget {
                           try {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
+                                    email: widget.emailController.text,
+                                    password: widget.passwordController.text);
                           } catch (error) {
-                            print(error);
+                            setState(() {
+                              errorMessage = error.toString();
+                            });
                           }
                         },
                         child: Text(
-                          'Log in',
+                          'Sign in',
                           style: GoogleFonts.poppins(
                             fontSize: SizeHelper.getSizeFromPx(context, 45),
                             fontWeight: FontWeight.normal,
