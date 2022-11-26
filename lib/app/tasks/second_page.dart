@@ -6,32 +6,39 @@ import 'package:to_do_app/helpers/size_helper.dart';
 import 'package:to_do_app/helpers/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SecondPage extends StatelessWidget {
-  SecondPage({Key? key, required this.user}) : super(key: key) {
-    adManager.addAds(true, true, true);
-  }
+class SecondPage extends StatefulWidget {
+  const SecondPage({Key? key, required this.user}) : super(key: key);
 
   final User user;
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
   final adManager = AdManager();
 
   final controller = TextEditingController();
 
   int _points = 3;
 
-  void _pointsCounter() {
-    setState() {
-      _points = _points + 3;
-    }
+  @override
+  void initState() {
+    super.initState();
+    adManager.addAds(true, true, true);
+    adManager.showRewardedAd();
+  }
 
-    ;
+  void _pointsCounter() {
+    setState(() {
+      _points = _points + 3;
+    });
   }
 
   void _lessPoint() {
-    setState() {
+    setState(() {
       _points = _points - 1;
-    }
-
-    ;
+    });
   }
 
   @override
@@ -62,6 +69,7 @@ class SecondPage extends StatelessWidget {
                             onPressed: () {
                               adManager.showRewardedAd();
                               Navigator.pop(context, true);
+                              _pointsCounter();
                             },
                             child: const Text('Watch'),
                           ),
@@ -69,14 +77,13 @@ class SecondPage extends StatelessWidget {
                       ),
                     );
                     _points;
-                    _pointsCounter;
                   }
                 : () {
                     FirebaseFirestore.instance.collection('tasks').add(
                       {'title': controller.text},
                     );
                     controller.clear();
-                    _lessPoint;
+                    _lessPoint();
                   },
             child: const Icon(Icons.add),
           ),
@@ -104,7 +111,7 @@ class SecondPage extends StatelessWidget {
               colors: [Constants.colorPink, Constants.colorBlue],
             ),
           ),
-          child: StreamBuilder<QuerySnapshot>(
+          child: StreamBuilder<QuerySnapshot<Object?>>(
             stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -125,7 +132,7 @@ class SecondPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          '${user.email}',
+                          '${widget.user.email}',
                           style: GoogleFonts.poppins(
                             fontSize: SizeHelper.getSizeFromPx(context, 45),
                             fontWeight: FontWeight.normal,
