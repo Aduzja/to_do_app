@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
           final user = snapshot.data;
           if (user == null) {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               body: Center(
                 child: Padding(
                   padding: EdgeInsets.all(
