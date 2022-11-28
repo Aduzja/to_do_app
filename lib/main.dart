@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:to_do_app/app/login/login_page.dart';
+import 'package:to_do_app/app/login/auth_service.dart';
 import 'firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: LoginPage(),
+      home: AuthService().handleAuthState(),
     );
   }
 }

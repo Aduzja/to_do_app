@@ -10,9 +10,9 @@ import 'package:to_do_app/helpers/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SecondPage extends StatefulWidget {
-  const SecondPage({Key? key, required this.user}) : super(key: key);
-
-  final User user;
+  const SecondPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SecondPage> createState() => _SecondPageState();
@@ -142,7 +142,7 @@ class _SecondPageState extends State<SecondPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                '${widget.user.email}',
+                                FirebaseAuth.instance.currentUser!.email!,
                                 style: GoogleFonts.poppins(
                                   fontSize:
                                       SizeHelper.getSizeFromPx(context, 45),
@@ -162,7 +162,7 @@ class _SecondPageState extends State<SecondPage> {
                                     ),
                                   ),
                                   Text(
-                                    '',
+                                    '$_points',
                                     style: GoogleFonts.poppins(
                                       fontSize:
                                           SizeHelper.getSizeFromPx(context, 45),

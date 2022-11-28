@@ -40,6 +40,8 @@ dependencies:
   google_fonts: ^3.0.1
   firebase_auth: ^4.1.3
   google_mobile_ads: ^2.3.0
+  google_sign_in: ^5.4.2
+  flutter_firebase_app: ^0.0.1
 
 dev_dependencies:
   flutter_test:
