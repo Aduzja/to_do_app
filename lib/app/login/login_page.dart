@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:to_do_app/app/login/auth_service.dart';
-import 'package:to_do_app/app/login/cubit/login_cubit.dart';
-import 'package:to_do_app/app/tasks/second_page.dart';
+import 'package:to_do_app/app/tasks/tasks_page.dart';
 import 'package:to_do_app/helpers/size_helper.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,137 +23,124 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(),
-      child: BlocBuilder<LoginCubit, LoginState>(
-        builder: (context, state) {
-          return StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              final user = snapshot.data;
-              if (user == null) {
-                return Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  body: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(
-                        SizeHelper.getSizeFromPx(context, 55),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            isCreatingAccount == true ? 'Register' : 'Sign in',
-                            style: GoogleFonts.poppins(
-                              fontSize: SizeHelper.getSizeFromPx(context, 55),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: SizeHelper.getSizeFromPx(context, 55),
-                          ),
-                          TextField(
-                            controller: widget.emailController,
-                            decoration:
-                                const InputDecoration(hintText: 'E-mail'),
-                          ),
-                          TextField(
-                            controller: widget.passwordController,
-                            decoration:
-                                const InputDecoration(hintText: 'Password'),
-                            obscureText: true,
-                          ),
-                          SizedBox(
-                            height: SizeHelper.getSizeFromPx(context, 55),
-                          ),
-                          Text(
-                            errorMessage,
-                            style: GoogleFonts.poppins(
-                              fontSize: SizeHelper.getSizeFromPx(context, 35),
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          SizedBox(
-                            height: SizeHelper.getSizeFromPx(context, 55),
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              if (isCreatingAccount == true) {
-                                try {
-                                  await FirebaseAuth.instance
-                                      .createUserWithEmailAndPassword(
-                                          email: widget.emailController.text,
-                                          password:
-                                              widget.passwordController.text);
-                                } catch (error) {
-                                  setState(() {
-                                    errorMessage = error.toString();
-                                  });
-                                }
-                              } else {
-                                try {
-                                  await FirebaseAuth.instance
-                                      .signInWithEmailAndPassword(
-                                          email: widget.emailController.text,
-                                          password:
-                                              widget.passwordController.text);
-                                } catch (error) {
-                                  setState(() {
-                                    errorMessage = error.toString();
-                                  });
-                                }
-                              }
-                            },
-                            child: Text(
-                              isCreatingAccount == true
-                                  ? 'Register'
-                                  : 'Sign in',
-                              style: GoogleFonts.poppins(
-                                fontSize: SizeHelper.getSizeFromPx(context, 45),
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              AuthService().signInWithGoogle();
-                            },
-                            child: const Text('Log in with Google'),
-                          ),
-                          SizedBox(
-                            height: SizeHelper.getSizeFromPx(context, 55),
-                          ),
-                          if (isCreatingAccount == false) ...[
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  isCreatingAccount = true;
-                                });
-                              },
-                              child: const Text('Create account'),
-                            ),
-                          ],
-                          if (isCreatingAccount == true) ...[
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  isCreatingAccount = false;
-                                });
-                              },
-                              child: const Text('Already have an account?'),
-                            ),
-                          ],
-                        ],
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        if (user == null) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Center(
+              child: Padding(
+                padding: EdgeInsets.all(
+                  SizeHelper.getSizeFromPx(context, 55),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      isCreatingAccount == true ? 'Register' : 'Sign in',
+                      style: GoogleFonts.poppins(
+                        fontSize: SizeHelper.getSizeFromPx(context, 55),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                );
-              }
-              return const SecondPage();
-            },
+                    SizedBox(
+                      height: SizeHelper.getSizeFromPx(context, 55),
+                    ),
+                    TextField(
+                      controller: widget.emailController,
+                      decoration: const InputDecoration(hintText: 'E-mail'),
+                    ),
+                    TextField(
+                      controller: widget.passwordController,
+                      decoration: const InputDecoration(hintText: 'Password'),
+                      obscureText: true,
+                    ),
+                    SizedBox(
+                      height: SizeHelper.getSizeFromPx(context, 55),
+                    ),
+                    Text(
+                      errorMessage,
+                      style: GoogleFonts.poppins(
+                        fontSize: SizeHelper.getSizeFromPx(context, 35),
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeHelper.getSizeFromPx(context, 55),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (isCreatingAccount == true) {
+                          try {
+                            await FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(
+                                    email: widget.emailController.text,
+                                    password: widget.passwordController.text);
+                          } catch (error) {
+                            setState(() {
+                              errorMessage = error.toString();
+                            });
+                          }
+                        } else {
+                          try {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                    email: widget.emailController.text,
+                                    password: widget.passwordController.text);
+                          } catch (error) {
+                            setState(() {
+                              errorMessage = error.toString();
+                            });
+                          }
+                        }
+                      },
+                      child: Text(
+                        isCreatingAccount == true ? 'Register' : 'Sign in',
+                        style: GoogleFonts.poppins(
+                          fontSize: SizeHelper.getSizeFromPx(context, 45),
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        AuthService().signInWithGoogle();
+                      },
+                      child: const Text('Log in with Google'),
+                    ),
+                    SizedBox(
+                      height: SizeHelper.getSizeFromPx(context, 55),
+                    ),
+                    if (isCreatingAccount == false) ...[
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            isCreatingAccount = true;
+                          });
+                        },
+                        child: const Text('Create account'),
+                      ),
+                    ],
+                    if (isCreatingAccount == true) ...[
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            isCreatingAccount = false;
+                          });
+                        },
+                        child: const Text('Already have an account?'),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
           );
-        },
-      ),
+        }
+        return const TasksPage();
+      },
     );
   }
 }

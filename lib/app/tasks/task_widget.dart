@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TaskWidget extends StatelessWidget {
   const TaskWidget(
-    this.title, {
+    this.title, document, {
     Key? key,
   }) : super(key: key);
 
